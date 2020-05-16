@@ -12,7 +12,7 @@ module.exports = [
     .isString()
     .withMessage("O nome deve ser uma string.")
     .isEmail()
-    .withMessage("Formato de e-mail inválido."),
+    .withMessage("E-mail inválido."),
   body("password")
     .exists()
     .withMessage("A senha é obrigatória.")
