@@ -37,10 +37,12 @@ routes.put(
   handle(controllers.AdController.update)
 );
 routes.delete("/ads/:id", handle(controllers.AdController.destroy));
+routes.put("/sold/:id", handle(controllers.AdController.sold));
 
 /**
  * Purchases
  */
+routes.get("/purchases", handle(controllers.PurchaseController.index));
 routes.post("/purchases", handle(controllers.PurchaseController.store));
 
 module.exports = routes;

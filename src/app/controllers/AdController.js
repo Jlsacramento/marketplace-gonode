@@ -1,4 +1,5 @@
 const Ad = require("../models/Ad");
+const Purchase = require("../models/Purchase");
 const { validationResult } = require("express-validator");
 
 class AdController {
@@ -21,6 +22,8 @@ class AdController {
       filters.title = new RegExp(req.query.title, "i");
     }
 
+    filters.purchasedBy = null;
+
     const ads = await Ad.paginate(filters, {
       page: req.query.page || 1,
       limit: 20,
@@ -32,7 +35,11 @@ class AdController {
   }
 
   async show(req, res) {
-    const ad = await Ad.findById(req.params.id);
+    const ad = await Ad.findOne({ _id: req.params.id, purchasedBy: null });
+
+    if (!ad) {
+      return res.json("O anúncio não foi encontrado ou já foi vendido.");
+    }
 
     return res.json(ad);
   }
@@ -65,6 +72,26 @@ class AdController {
     await Ad.findByIdAndDelete(req.params.id);
 
     return res.send();
+  }
+
+  async sold(req, res) {
+    const purchase = await Purchase.findByIdAndUpdate(
+      req.params.id,
+      { sold: true },
+      {
+        new: true,
+      }
+    );
+
+    await Ad.findByIdAndUpdate(
+      purchase.adId,
+      { purchasedBy: purchase._id },
+      {
+        new: true,
+      }
+    );
+
+    res.json("O produto foi vendido.");
   }
 }
 
