@@ -6,7 +6,7 @@ class UserController {
     const errors = validationResult(req).array({ onlyFirstError: true });
     console.log(errors);
 
-    if (errors) {
+    if (errors.length) {
       return res.status(422).json({ errors });
     }
 

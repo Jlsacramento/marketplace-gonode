@@ -39,7 +39,7 @@ class AdController {
 
   async store(req, res) {
     const errors = validationResult(req).array({ onlyFirstError: true });
-    if (errors) {
+    if (errors.length) {
       return res.status(422).json({ errors });
     }
 
